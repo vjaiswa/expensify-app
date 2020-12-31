@@ -1,26 +1,20 @@
-import moment from 'moment'
+import moment from 'moment';
 
-export default (expenses,{text, sortBy, startDate,endDate}) =>{
-    return expenses.filter((expense) =>{
-        const createdDateMoment = moment(expense.createdAt)
-        const startDatematch = startDate ? startDate.isSameOrBefore(createdDateMoment,'day') :true;
-        const endDateMatch = endDate ? endDate.isSameOrAfter(createdDateMoment,'day') :true;
-        let textMatch = true;
+// Get visible expenses
 
-        if(expense.description.toLowerCase().indexOf(text.toLowerCase()) <= -1){
-            textMatch = false
-        }
+export default (expenses, { text, sortBy, startDate, endDate }) => {
+  return expenses.filter((expense) => {
+    const createdAtMoment = moment(expense.createdAt);
+    const startDateMatch = startDate ? startDate.isSameOrBefore(createdAtMoment, 'day') : true;
+    const endDateMatch = endDate ? endDate.isSameOrAfter(createdAtMoment, 'day') : true;
+    const textMatch = expense.description.toLowerCase().includes(text.toLowerCase());
 
-        if(startDatematch && endDateMatch && textMatch){
-            return expense
-        }
-    }).sort((a,b) =>{
-        if(sortBy == "date"){
-            return a.createdAt < b.createdAt ? 1 : -1 
-        }else if(sortBy = "amount"){
-            return a.amount < b.amount ? 1 : -1
-        }
-    })
-    
-}
-
+    return startDateMatch && endDateMatch && textMatch;
+  }).sort((a, b) => {
+    if (sortBy === 'date') {
+      return a.createdAt < b.createdAt ? 1 : -1;
+    } else if (sortBy === 'amount') {
+      return a.amount < b.amount ? 1 : -1;
+    }
+  });
+};
